@@ -359,6 +359,12 @@
 </div>
 
 <style lang="postcss">
+
+  #OtherScreens {
+    height: 100%;
+    overflow-y: auto;
+  }
+
   input {
     -webkit-appearance: none;
     -moz-appearance: textfield;
