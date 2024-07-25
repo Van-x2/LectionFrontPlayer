@@ -235,7 +235,7 @@
                         <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
                           <input 
                             type="text" 
-                            class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                            class="w-full h-full text-[15px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
                             placeholder="Username"
                             bind:value={usernameField}
                           >
