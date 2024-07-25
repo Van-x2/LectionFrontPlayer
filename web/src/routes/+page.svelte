@@ -229,7 +229,7 @@
                   </div>
                 </div>
                 <div class="w-full h-[55%] flex justify-center bg-purple-500">
-                  <div class="w-[92%] h-[185px]">
+                  <div class="w-[88%] h-[185px] ">
                     <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
                       <div class="w-full h-full flex flex-col">
                         <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
