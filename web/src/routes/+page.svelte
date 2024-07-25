@@ -242,7 +242,7 @@
                         </div>
                         <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
                           <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
-                            <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
+                            <div class="w-full h-full flex items-center justify-center text-white text-[13px] font-normal">
                               <p>
                                 Enter
                               </p>
