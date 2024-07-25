@@ -228,7 +228,7 @@
                     </p>
                   </div>
                 </div>
-                <div class="w-full h-[55%] flex justify-center bg-lime-300">
+                <div class="w-full h-[55%] flex justify-center ">
                   <div class="w-[88%] h-[185px] ">
                     <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
                       <div class="w-full h-full flex flex-col">
