@@ -22,7 +22,7 @@
   
   onMount(() => {
   //so the user cannot scroll the page
-  document.body.style.overflow = 'hidden'
+  //document.body.style.overflow = 'hidden'
   document.body.style.touchAction = 'none'
 
   //variable used to reference the document outside of onMount()
