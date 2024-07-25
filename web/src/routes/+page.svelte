@@ -160,7 +160,7 @@
 
 </script>
 
-<div id="window" class="w-screen h-screen bg-gray1">
+<div id="window" class="w-screen h-[100svh] bg-gray1">
   <div class="w-full h-full flex flex-col">
     <div id="topWrapper" class=" w-full h-[270px] ">
       <div id="nav" class="w-full h-20 relative bg-white shadow-lg z-10">
