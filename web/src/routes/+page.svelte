@@ -1,9 +1,13 @@
 <script>
   import { onMount } from 'svelte'
 
+  //variables used for collecting data from input forms
+    //Used for holding users username
+    let usernameField = ''
+    let username = ''
+
   //temp variables, will be replaced with actual staged user input
   let joincodeField = ''
-  let nameField = ''
   let currentprompt = 0
   let answerField = ''
   let confidenceValue = '3'
@@ -12,15 +16,24 @@
   //page elements
   let menuCard
   let menuIcon
+  let mountedDocument
+  let usernameInputCard
 
   
   onMount(() => {
+  //so the user cannot scroll the page
+  document.body.style.overflow = 'hidden'
+
+  //variable used to reference the document outside of onMount()
+  mountedDocument = document
   menuCard = document.getElementById('menu')
   menuIcon = document.getElementById('menuIcon')
-
+  usernameInputCard = document.getElementById('usernameInputCard')
+  
+  loadPossibleUsername()
   })
 
-
+  //handles majoriy of the backend communication
   function joinLobby() {
     
     //defines JSON data to be sent to backend
@@ -64,11 +77,11 @@
 
     async function submitClientResponse() {}
   }
-
+  //to leave the lobby (not done)
   function leaveLobby() {
     console.log('left the lobby')
   }
-
+  //handles submitting data back to the database
   function submitResponse() {
     let asnwerContent = {
       response: answerField,
@@ -106,6 +119,43 @@
     }
   }
 
+  //function to load username from cookie
+  function loadPossibleUsername() {
+    if(mountedDocument.cookie) {
+      let cookieUsername = mountedDocument.cookie.split('=')[1]
+      usernameInputCard.classList.add('translate-y-[700px]')
+      username = cookieUsername
+      usernameField = cookieUsername
+      
+    }
+  }
+
+  function submitUsername() {
+    //defines permanent username using the temp usernameField var
+    username = usernameField
+
+
+    //Adds username to the cookie & makes sure it wont expire for a long LONG time
+    const farFutureDate = new Date()
+    farFutureDate.setFullYear(farFutureDate.getFullYear() + 100); // Setting the expiry date 100 years in the future
+    document.cookie = `username=${username}; expires=${farFutureDate.toUTCString()}; path=/`
+
+    //slides the card out of view
+    usernameInputCard.classList.add('translate-y-[700px]')
+  }
+
+  function clearUsername() {
+    menuIconClicked()
+    //clears the username var
+    username = ''
+
+    //clears username cookie
+    document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
+
+    //slides card back into view
+    usernameInputCard.classList.remove('translate-y-[700px]')
+  }
+
 </script>
 
 <div id="window" class="w-screen h-screen bg-gray1">
@@ -124,6 +174,13 @@
               </div>
             </div>
           </div>
+          <div class="h-20 w-fit p-4 pl-6">
+            <div class="w-full h-full flex items-center">
+              <p class=" text-primary font-title font-bold italic text-[35px]">
+              {username}
+              </p>
+            </div>
+          </div>
           <div class="h-20 w-20 bg-white right-0 absolute">
             <div class="w-full h-full">
               <div id="menuIcon" class="w-full h-full flex items-center justify-center transition-all duration-300">
@@ -140,7 +197,7 @@
       <div id="menu" class="w-full h-40 flex justify-center z-9  transition-all -translate-y-40 duration-300 absolute">
         <div class="w-[99%] h-full bg-gray2 border-b-[4px] border-x-[4px] border-neutral-700 rounded-br-[30px] rounded-bl-[30px] p-[10px]">
           <div class="w-full h-full font-normal font-semibold text-[17px]">
-            <button class="w-full h-[44%] mt-[5px] mb-[7px]">
+            <button class="w-full h-[44%] mt-[5px] mb-[7px]" on:click={clearUsername}>
               <div class="w-full h-full bg-neutral-800 rounded-[13px] flex text-white justify-center items-center">
                 <span>Reset Username</span>
               </div>
@@ -157,8 +214,8 @@
     <div id="bottomWrapper" class="flex-grow w-full">
       <div class="w-full h-full relative">
         <div class="w-full h-full absolute z-10">
-          <div id="UsernameInputCard" class="relative w-full h-full">
-            <div class="w-full h-full bg-gray2  rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
+          <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms]">
+            <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
               <div class="w-full h-2/3">
                 <div class="w-full h-[40%] ">
                   <div class="w-full h-full flex justify-center items-center">
@@ -171,11 +228,16 @@
                   <div class="w-[88%] h-[185px] ">
                     <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
                       <div class="w-full h-full flex flex-col">
-                        <div class="w-[100] h-[44%] rounded-[10px] border-2 border-accent mb-2 mt-[7px]">
-                          <input type="text" class="w-full h-full text-[18px] font-normal text-accent text-center rounded-[10px] focus:outline-none" placeholder="Username">
+                        <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
+                          <input 
+                            type="text" 
+                            class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                            placeholder="Username"
+                            bind:value={usernameField}
+                          >
                         </div>
-                        <button class="w-[100%] h-[44%] mb-2">
-                          <div class="w-full h-full rounded-[10px] bg-neutral-800 mb-2 ">
+                        <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
+                          <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
                             <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
                               <p>
                                 Enter
