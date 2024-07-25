@@ -300,7 +300,7 @@
           </div>
         </div>
         <div class="w-full h-full absolute">
-          <div id="OtherScreens" class=" w-full h-full ">
+          <div id="OtherScreens" class=" w-full h-full overflow-y-auto">
             <div class="w-full h-full flex flex-col justify-end">
               <div class="w-full h-[25%] ">
                 <div class="w-full h-full flex justify-center items-center">
