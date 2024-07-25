@@ -256,17 +256,17 @@
               </div>
               <div class="w-full h-1/3 relative text-neutral-700">
                 <div class="w-full h-[120px] bottom-0 absolute">
-                  <div class="w-full h-[80%] ">
+                  <div class="w-full h-3/4 ">
                     <div class="w-full h-full flex justify-center items-end">
-                      <div class="w-2/3 h-[50%]">
-                        <p class="  font-normal text-[14px] text-center">
+                      <div class="w-2/3 h-2/3">
+                        <p class="  font-normal text-[18px] text-center">
                           Create your own Lectionary for FREE at 
                           <span class="font-semibold">Lection.cc</span> 
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div class="w-full h-[20%] flex font-normal font-semibold text-[14px]">
+                  <div class="w-full h-1/4 flex font-normal font-semibold text-[16px]">
                     <div class="w-1/3 h-full text-left pl-4">
                       <button>
                         Terms
