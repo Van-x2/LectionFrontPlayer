@@ -6,9 +6,11 @@
     //Used for holding users username
     let usernameField = ''
     let username = ''
+    //Used to hold the current joincode
+    let joincodeField = ''
+    let joincode = ''
 
   //temp variables, will be replaced with actual staged user input
-  let joincodeField = ''
   let currentprompt = 0
   let answerField = ''
   let confidenceValue = '3'
@@ -19,6 +21,7 @@
   let menuIcon
   let mountedDocument
   let usernameInputCard
+  let usernameInputCardParent
 
   
   onMount(() => {
@@ -33,6 +36,7 @@
   menuCard = document.getElementById('menu')
   menuIcon = document.getElementById('menuIcon')
   usernameInputCard = document.getElementById('usernameInputCard')
+  usernameInputCardParent = document.getElementById('usernameInputCardParent')
   
   loadPossibleUsername()
   })
@@ -128,6 +132,7 @@
     if(mountedDocument.cookie) {
       let cookieUsername = mountedDocument.cookie.split('=')[1]
       usernameInputCard.classList.add('translate-y-[700px]')
+      usernameInputCardParent.classList.add('pointer-events-none')
       username = cookieUsername
       usernameField = cookieUsername
       
@@ -146,6 +151,7 @@
 
     //slides the card out of view
     usernameInputCard.classList.add('translate-y-[700px]')
+    usernameInputCardParent.classList.add('pointer-events-none')
   }
 
   function clearUsername() {
@@ -158,11 +164,12 @@
 
     //slides card back into view
     usernameInputCard.classList.remove('translate-y-[700px]')
+    usernameInputCardParent.classList.remove('pointer-events-none')
   }
 
 </script>
 
-<div id="window" class="w-screen h-[100svh] bg-gray1">
+<div id="window" class="w-screen h-[100svh] bg-gray1 select-none">
   <div class="w-full h-full flex flex-col">
     <div id="topWrapper" class=" w-full h-[190px]">
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
@@ -217,8 +224,8 @@
     </div>
     <div id="bottomWrapper" class="flex-grow w-full">
       <div class="w-full h-full relative">
-        <div class="w-full h-full absolute z-10">
-          <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms]">
+        <div id="usernameInputCardParent" class="w-full h-full absolute z-10">
+          <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms] ">
             <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
               <div class="w-full h-2/3">
                 <div class="w-full h-[45%] ">
@@ -261,7 +268,11 @@
                       <div class="w-2/3 h-[50%]">
                         <p class="  font-normal text-[14px] text-center">
                           Create your own Lectionary for FREE at 
-                          <span class="font-semibold">Lection.cc</span> 
+                          <span class="font-semibold ">
+                            <a href="http://lection.cc/" target="_blank">
+                              Lection.cc
+                            </a>
+                          </span> 
                         </p>
                       </div>
                     </div>
@@ -288,9 +299,58 @@
             </div>
           </div>
         </div>
-        <div class="w-full h-full absolute z-0">
-          <div id="OtherScreens" class="relative w-full h-full">
+        <div class="w-full h-full absolute">
+          <div id="OtherScreens" class=" w-full h-full ">
+            <div class="w-full h-full flex flex-col justify-end">
+              <div class="w-full h-[25%] ">
+                <div class="w-full h-full flex justify-center items-center">
+                  <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
+                    Join a lectionary using an educator-provided PIN.
+                  </p>
+                </div>
+              </div>
+              <div class="w-full h-[60%]">
+                <div class="w-full h-[60%] flex justify-center items-center">
+                  <div class="w-[90%] h-[90%]">
+                    <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
+                      <div class="w-full h-full flex flex-col">
+                        <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
+                          <input 
+                            type="number" 
+                            class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                            placeholder="Lectionary PIN"
+                            bind:value={joincodeField}
+                            pattern="[0-9]+"
+                          >
+                        </div>
+                        <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
+                          <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
+                            <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
+                              <p>
+                                Enter
+                              </p>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-full h-[40%]">
 
+                </div>
+              </div>
+              <div class="w-full h-[15%] flex justify-center items-center">
+                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-700">
+                  Create your own Lectionary for FREE at
+                  <span class="font-bold">
+                    <a href="http://lection.cc/" target="_blank">
+                      Lection.cc
+                    </a>
+                  </span>  
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -298,3 +358,10 @@
   </div>
   
 </div>
+
+<style lang="postcss">
+  input {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+</style>
