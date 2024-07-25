@@ -164,7 +164,7 @@
 
 <div id="window" class="w-screen h-[100svh] bg-gray1">
   <div class="w-full h-full flex flex-col">
-    <div id="topWrapper" class=" w-full h-[270px]">
+    <div id="topWrapper" class=" w-full h-[190px]">
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
         <div class="w-full h-full flex relative">
           <div class="h-16 w-16 bg-primary flex items-center justify-center">
@@ -221,28 +221,28 @@
           <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms]">
             <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
               <div class="w-full h-2/3">
-                <div class="w-full h-[40%] ">
+                <div class="w-full h-[45%] ">
                   <div class="w-full h-full flex justify-center items-center">
                     <p class=" text-primary font-title font-bold italic text-[60px]">
                       Lection
                     </p>
                   </div>
                 </div>
-                <div class="w-full h-[60%] flex justify-center ">
-                  <div class="w-[92%] h-[90%] ">
+                <div class="w-full h-[55%] flex justify-center bg-lime-300">
+                  <div class="w-[88%] h-[185px] ">
                     <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
                       <div class="w-full h-full flex flex-col">
                         <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
                           <input 
                             type="text" 
-                            class="w-full h-full text-[15px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                            class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
                             placeholder="Username"
                             bind:value={usernameField}
                           >
                         </div>
                         <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
                           <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
-                            <div class="w-full h-full flex items-center justify-center text-white text-[15px] font-normal">
+                            <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
                               <p>
                                 Enter
                               </p>
@@ -256,17 +256,17 @@
               </div>
               <div class="w-full h-1/3 relative text-neutral-700">
                 <div class="w-full h-[120px] bottom-0 absolute">
-                  <div class="w-full h-3/4 ">
+                  <div class="w-full h-[80%] ">
                     <div class="w-full h-full flex justify-center items-end">
-                      <div class="w-2/3 h-2/3">
-                        <p class="  font-normal text-[18px] text-center">
+                      <div class="w-2/3 h-[50%]">
+                        <p class="  font-normal text-[14px] text-center">
                           Create your own Lectionary for FREE at 
                           <span class="font-semibold">Lection.cc</span> 
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div class="w-full h-1/4 flex font-normal font-semibold text-[16px]">
+                  <div class="w-full h-[20%] flex font-normal font-semibold text-[14px]">
                     <div class="w-1/3 h-full text-left pl-4">
                       <button>
                         Terms
@@ -298,4 +298,3 @@
   </div>
   
 </div>
-
