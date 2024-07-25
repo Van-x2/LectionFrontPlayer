@@ -164,7 +164,7 @@
 
 <div id="window" class="w-screen h-[100svh] bg-gray1">
   <div class="w-full h-full flex flex-col">
-    <div id="topWrapper" class=" w-full h-[190px]">
+    <div id="topWrapper" class=" w-full h-[270px]">
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
         <div class="w-full h-full flex relative">
           <div class="h-16 w-16 bg-primary flex items-center justify-center">
@@ -221,14 +221,14 @@
           <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms]">
             <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
               <div class="w-full h-2/3">
-                <div class="w-full h-[45%] ">
+                <div class="w-full h-[40%] ">
                   <div class="w-full h-full flex justify-center items-center">
                     <p class=" text-primary font-title font-bold italic text-[60px]">
                       Lection
                     </p>
                   </div>
                 </div>
-                <div class="w-full h-[55%] flex justify-center ">
+                <div class="w-full h-[60%] flex justify-center ">
                   <div class="w-[92%] h-[90%] ">
                     <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
                       <div class="w-full h-full flex flex-col">
