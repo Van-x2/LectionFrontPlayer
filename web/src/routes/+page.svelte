@@ -235,14 +235,14 @@
                         <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
                           <input 
                             type="text" 
-                            class="w-full h-full text-[15px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                            class="w-full h-full text-[17px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
                             placeholder="Username"
                             bind:value={usernameField}
                           >
                         </div>
                         <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
                           <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
-                            <div class="w-full h-full flex items-center justify-center text-white text-[15px] font-normal">
+                            <div class="w-full h-full flex items-center justify-center text-white text-[17px] font-normal">
                               <p>
                                 Enter
                               </p>
