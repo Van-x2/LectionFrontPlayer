@@ -9,11 +9,20 @@
     //Used to hold the current joincode
     let joincodeField = ''
     let joincode = ''
+    //Used to hold the current response to the prompt
+    let promptResponse
+    let promptResponseField
+    let currentPrompt = 0
+    //
+    let confidenceField = 3
+    let confidence = 3
 
-  //temp variables, will be replaced with actual staged user input
-  let currentprompt = 0
+    let statusTextColor = 'text-primary'
+
+
+  //temp variables, will be replaced with actual staged user inputs
   let answerField = ''
-  let confidenceValue = '3'
+  let confidenceValue = 3
   let menuOpen = false
 
   //page elements
@@ -22,12 +31,18 @@
   let mountedDocument
   let usernameInputCard
   let usernameInputCardParent
+  let statusText
+  let lobbyJoinCard
+  let lobbyPreStartCard
+  let promptContent
+  let ResponseSubmittedCard
 
   
   onMount(() => {
   //so the user cannot scroll the page
-  document.body.style.overflow = 'hidden'
+  //document.body.style.overflow = 'hidden'
   document.body.style.touchAction = 'none'
+  document.body.style.position = 'fixed'
 
 
 
@@ -37,20 +52,30 @@
   menuIcon = document.getElementById('menuIcon')
   usernameInputCard = document.getElementById('usernameInputCard')
   usernameInputCardParent = document.getElementById('usernameInputCardParent')
+  statusText = document.getElementById('statusText')
+  lobbyJoinCard = document.getElementById('lobbyJoinCard')
+  lobbyPreStartCard = document.getElementById('lobbyPreStartCard')
+  promptContent = document.getElementById('promptContent')
+  ResponseSubmittedCard = document.getElementById('ResponseSubmittedCard')
   
   loadPossibleUsername()
   })
 
+//For communicating with backend
   //handles majoriy of the backend communication
-  function joinLobby() {
-    
+  function joinLobby(localJoincode) {
+    //error handling
+    let errorPassed = false
+
+    //formatting username to lowercase
+    let usernameLower = username.toLocaleLowerCase()
     //defines JSON data to be sent to backend
     let bodyContent = {
-      name: nameField,
-      joincode: joincodeField
+      name: username,
+      joincode: localJoincode
     }
     //sends JSON data to the backend adding the client to the participants field
-    fetch(`http://localhost:5313/joinlobby${joincodeField}`, 
+    fetch(`http://localhost:5313/joinlobby${localJoincode}`, 
   {
       method: "POST", 
       body: JSON.stringify(bodyContent),
@@ -61,43 +86,81 @@
     //error checking response
     .then( response => {
       if (!response.ok) {
-        throw new Error(`There was an error: ${response.status}`)
+        errorPassed = true
+        setStatusText("PIN not recognized", 'text-red-800')
+        setTimeout(() => {
+        setStatusText()
+        },1700)
+        throw new Error(`Unable to find a lobby using the submitted lobby joincode`)
       }
       return response
     })
     //begins SSE connection with lobbyClientCom()
     .then(() => {
-      lobbyClientCom()
+      console.log('request received')
+      setStatusText("Joining lectionary")
+      setTimeout(() => {
+        setStatusText()
+        },1000)
+        enterLobby()
+        lobbyClientCom()
     })
+    .catch(error => {
+      if (!errorPassed) {
+        console.error(error)
+        setStatusText("Server not responding", 'text-red-800')
+        setTimeout(() => {
+        setStatusText()
+        },3000)
+      }
+    })
+    setStatusText("Searching...")
+
+    let oldPrompts
+    let currentPrompts
 
     //Starts listening to SSE from the backend to update prompts
     async function lobbyClientCom() {
-      const source = new EventSource(`http://localhost:5313/lobbyclient${joincodeField}${nameField}`)
+      const source = new EventSource(`http://localhost:5313/lobbyclient${joincodeField}${username}`)
+
       source.addEventListener('message', message => {
         let response = JSON.parse(message.data)
+
+        currentPrompts = response.prompts
+
         console.log(response)
+        if(response.prompts.length === 1) {
+          startLobby(currentPrompts)
+        }
         if(response.status === 3) {
           source.close()
           leaveLobby()
         }
+        if(currentPrompts != oldPrompts) {
+          updatePromptPage(currentPrompts)
+        }
+        oldPrompts = currentPrompts
       })
     }
 
-    async function submitClientResponse() {}
-  }
+    }
+  
   //to leave the lobby (not done)
   function leaveLobby() {
     console.log('left the lobby')
   }
   //handles submitting data back to the database
   function submitResponse() {
+    promptResponse = promptResponseField
+    confidence = confidenceValue
+
     let asnwerContent = {
-      response: answerField,
-      confidence: confidenceValue,
-      promptIndex: currentprompt
+      response: promptResponse,
+      confidence: confidence,
+      promptIndex: currentPrompt
     }
   //submit asnwer to mongodb
-    fetch(`http://localhost:5313/clientsubmitresponse${joincodeField}${nameField}`, 
+    fetch(`http://localhost:5313/clientsubmitresponse${joincodeField}${username}`, 
   {
       method: "POST", 
       body: JSON.stringify(asnwerContent),
@@ -112,8 +175,17 @@
       }
       return response
     })
+    .then(console.log('submitted response'))
+    .catch(error => console.error(error))
+
+    ResponseSubmittedCard.classList.add('opacity-75')
+    ResponseSubmittedCard.classList.remove('opacity-0')
+    ResponseSubmittedCard.classList.add('pointer-events-auto')
+
+    currentPrompt = currentPrompt + 1
   }
 
+//for listing to page actions
   function menuIconClicked() {
     if(!menuOpen) {
       menuIcon.classList.add('-rotate-90')
@@ -126,7 +198,12 @@
       menuOpen = false
     }
   }
+  function joincodeSubmit() {
+    joincode = joincodeField
+    joinLobby(joincode)
+  }
 
+//for updating page data
   //function to load username from cookie
   function loadPossibleUsername() {
     if(mountedDocument.cookie) {
@@ -138,10 +215,10 @@
       
     }
   }
-
+  //function to add username to temp storage and to the cookie
   function submitUsername() {
     //defines permanent username using the temp usernameField var
-    username = usernameField
+    username = usernameField.trim()
 
 
     //Adds username to the cookie & makes sure it wont expire for a long LONG time
@@ -153,7 +230,7 @@
     usernameInputCard.classList.add('translate-y-[700px]')
     usernameInputCardParent.classList.add('pointer-events-none')
   }
-
+  //function to clear the username from the cookie and temp storage
   function clearUsername() {
     menuIconClicked()
     //clears the username var
@@ -166,6 +243,58 @@
     usernameInputCard.classList.remove('translate-y-[700px]')
     usernameInputCardParent.classList.remove('pointer-events-none')
   }
+  //function to change the status text near the PIN input area
+  function setStatusText(string = '', color = 'text-primary') {
+    if(string === '') {
+
+      statusText.classList.add('opacity-0')
+      setTimeout(() => {
+        statusText.classList.remove('animate-pulse')
+
+        setTimeout(() =>{
+        statusText.classList.add(color)
+        statusText.classList.remove(statusTextColor)
+        statusTextColor = color
+      }, 300)
+
+      },300)
+    }
+    else {
+      //manages the color of the text
+      statusText.classList.add(color)
+      statusText.classList.remove(statusTextColor)
+      statusTextColor = color
+
+      statusText.innerText = string
+      statusText.classList.remove('opacity-0')
+      statusText.classList.add('animate-pulse')
+    }
+  }
+  //postEnterLobby phase
+  function enterLobby() {
+  console.log('Lobby joined')
+  lobbyJoinCard.classList.add('opacity-0')
+  lobbyJoinCard.classList.add('pointer-events-none')
+  }
+
+  function startLobby() {
+  console.log('Lobby started')
+  lobbyPreStartCard.classList.add('opacity-0')
+  lobbyPreStartCard.classList.add('pointer-events-none')
+  }
+
+  function updatePromptPage(prompts) {
+    ResponseSubmittedCard.classList.remove('opacity-75')
+    ResponseSubmittedCard.classList.add('opacity-0')
+    ResponseSubmittedCard.classList.add('pointer-events-none')
+    ResponseSubmittedCard.classList.remove('pointer-events-auto')
+
+    promptResponseField = ''
+    confidenceValue = 3
+    const currentPromptContent = prompts[currentPrompt]
+    promptContent.innerText = currentPromptContent
+  }
+
 
 </script>
 
@@ -206,7 +335,7 @@
         </div>
       </div>
       <div id="menu" class="w-full h-[115px] flex justify-center z-9  transition-all -translate-y-40 duration-300 absolute">
-        <div class="w-[99%] h-full bg-gray2 border-b-[4px] border-x-[4px] border-neutral-700 rounded-br-[25px] rounded-bl-[25px] px-[8px] py-[7px]">
+        <div class="w-[99%] h-full bg-gray2 border-b-[4px] border-x-[4px] border-neutral-800 rounded-br-[25px] rounded-bl-[25px] px-[8px] py-[7px]">
           <div class="w-full h-full font-normal font-semibold text-[13px] relative">
             <button class="w-full h-[45%]" on:click={clearUsername}>
               <div class="w-full h-full bg-neutral-800 rounded-[13px] flex text-white justify-center items-center">
@@ -224,7 +353,7 @@
     </div>
     <div id="bottomWrapper" class="flex-grow w-full">
       <div class="w-full h-full relative">
-        <div id="usernameInputCardParent" class="w-full h-full absolute z-10">
+        <div id="usernameInputCardParent" class="w-full h-full absolute z-50">
           <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms] ">
             <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
               <div class="w-full h-2/3">
@@ -261,7 +390,7 @@
                   </div>
                 </div>
               </div>
-              <div class="w-full h-1/3 relative text-neutral-700">
+              <div class="w-full h-1/3 relative text-neutral-800">
                 <div class="w-full h-[120px] bottom-0 absolute">
                   <div class="w-full h-[80%] ">
                     <div class="w-full h-full flex justify-center items-end">
@@ -300,8 +429,8 @@
           </div>
         </div>
         <div class="w-full h-full absolute">
-          <div id="OtherScreens" class=" w-full h-full overflow-y-auto">
-            <div class="w-full h-full flex flex-col justify-end">
+          <div id="OtherScreens" class=" w-full h-full relative">
+            <div id="lobbyJoinCard" class="w-full h-full flex flex-col justify-end absolute z-40 bg-gray1 transition-all duration-300">
               <div class="w-full h-[25%] ">
                 <div class="w-full h-full flex justify-center items-center">
                   <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
@@ -309,20 +438,21 @@
                   </p>
                 </div>
               </div>
-              <div class="w-full h-[60%]">
+              <div class="w-full h-[60%] ">
                 <div class="w-full h-[60%] flex justify-center items-center">
                   <div class="w-[90%] h-[90%]">
                     <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
                       <div class="w-full h-full flex flex-col">
                         <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
                           <input 
-                            type="text" 
+                            type="text"
+                            inputmode="decimal" 
                             class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
                             placeholder="Lectionary PIN"
                             bind:value={joincodeField}
                           >
                         </div>
-                        <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
+                        <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={joincodeSubmit}>
                           <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
                             <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
                               <p>
@@ -335,12 +465,14 @@
                     </div>
                   </div>
                 </div>
-                <div class="w-full h-[40%]">
-
+                <div class="w-full h-[40%] flex flex-col justify-start items-center pt-2 ">
+                  <p id="statusText" class="text-center w-2/3 font-normal text-primary text-[18px] font-semibold transition-all duration-500 opacity-0">
+                    This is some status text
+                  </p>
                 </div>
               </div>
               <div class="w-full h-[15%] flex justify-center items-center">
-                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-700">
+                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
                   Create your own Lectionary for FREE at
                   <span class="font-bold">
                     <a href="http://lection.cc/" target="_blank">
@@ -350,6 +482,96 @@
                 </p>
               </div>
             </div>
+            <div id="lobbyPreStartCard" class="w-full h-full flex flex-col justify-end absolute z-30 bg-gray1 transition-all duration-300">
+              <div class="w-full h-[60%]">
+                <div class="w-full h-full flex justify-center items-center">
+                  <div class="w-[90%] h-fit p-8 flex justify-center items-center bg-white rounded-[20px] border-2 border-secondary shadow-xl">
+                    <p class="text-center w-[90%] text-[18px] text-neutral-800 font-normal font-semibold ">
+                      Joined the Lectionary
+                      <br>
+                      <br>
+                      Waiting for the educator to begin...
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full h-[25%] ">
+              </div>
+              <div class="w-full h-[15%] flex justify-center items-center">
+                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
+                  Create your own Lectionary for FREE at
+                  <span class="font-bold pointer-events-auto">
+                    <a href="http://lection.cc/" target="_blank">
+                      Lection.cc
+                    </a>
+                  </span>  
+                </p>
+              </div>
+            </div>
+            <div id="ResponseSubmittedCard" class="w-full h-full flex justify-center items-center absolute z-20 bg-gray1 transition-all duration-300 opacity-0 pointer-events-none">
+              <div class="w-full h-full flex justify-center items-center">
+                <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
+                  Response Submitted
+                </p>
+              </div>
+            </div>
+            <div id="lobbyHappeningCard" class="w-full h-full flex flex-col justify-start absolute z-10 bg-gray1 transition-all duration-300">
+              <div class="w-full h-[95%]">
+                <div class="w-full h-full flex justify-center items-center">
+                  <div class="w-[90%] h-[100%]">
+                    <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[12px] px-[12px]">
+                      <div class="w-full h-full flex flex-col p-[5px]">
+                        <div class="w-full h-[65%]">
+                          <div class="w-full h-1/3  flex items-center justify-center  flex-col pb-4">
+                            <div class="w-full h-1/2 font-normal text-[20px] font-semibold -translate-x-[3px] -translate-y-[8px] text-secondary">
+                              {currentPrompt + 1}
+                            </div>
+                            <div class="w-full h-1/2 flex justify-center">
+                              <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[13px] font-normal font-semibold text-center">
+                                This is a mockup prompt, what do you think, what are your thoughts?
+                              </p>
+                            </div>
+                          </div>
+                          <div class="w-full h-2/3 pb-2">
+                          <div class="w-full h-full">
+                            <textarea 
+                            class="w-full h-full text-[14px] font-normal border-2 border-accent focus:border-[4px] text-accent rounded-[10px] focus:outline-none transition-all duration-75 p-2" 
+                            placeholder="Enter response here"
+                            bind:value={promptResponseField}
+                          />
+                          </div>
+                          </div>
+                        </div>
+                        <div class="w-full h-[35%]">
+                          <div class="w-full h-[68%]">
+                            <div class="w-full h-[50%]">
+                              <p class=" text-neutral-700 text-center text-[13px] font-normal font-semibold">How confident are you in this response?</p>
+                              <p class=" text-accent text-center text-[18px] font-normal font-semibold">{confidenceValue}/5</p>
+                            </div>
+                            <div class="w-full h-[50%] ">
+                              <div class="w-full h-full flex justify-center items-center">
+                                <input id="confidenceSlider" class="w-[90%]" type="range" step="1" min="1" max="5" bind:value={confidenceValue}>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="w-full h-[32%] ">
+                            <button class="w-[100%] h-[100%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitResponse}>
+                              <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 translate-y-[7px]">
+                                <div class="w-full h-full flex items-center justify-center text-white text-[14px] font-normal">
+                                  <p>
+                                    Enter
+                                  </p>
+                                </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -360,13 +582,40 @@
 
 <style lang="postcss">
 
-  #OtherScreens {
-    height: 100%;
-    overflow-y: auto;
-  }
-
   input {
     -webkit-appearance: none;
     -moz-appearance: textfield;
   }
+
+  #confidenceSlider {
+  -webkit-appearance: none;
+  width: 90%;
+  height: 8px;
+  border-radius: 5px;  
+  background: #99B2BD;
+  outline: none;
+  opacity: 100;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+#confidenceSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 17px;
+  height: 30px;
+  border-radius: 20%;
+  background: #353535;
+  cursor: pointer;
+  border: 0cm;
+}
+
+#confidenceSlider::-moz-range-thumb {
+  width: 17px;
+  height: 30px;
+  border-radius: 20%;
+  background: #353535;
+  cursor: pointer;
+  border: 0cm;
+}
 </style>
