@@ -16,7 +16,11 @@ export default {
       fontFamily: {
         'title': ['Libre Caslon Text', 'serif'],
         'normal': ['Libre Caslon Text', 'serif'],
-      }
+      },
+      animation: {
+        slowPulse: 'pulse 3s infinite',
+        fastPulse: 'pulse 0.75s infinite',
+      },
     }
   },
   plugins: []
