@@ -75,7 +75,7 @@
       joincode: localJoincode
     }
     //sends JSON data to the backend adding the client to the participants field
-    fetch(`http://localhost:5313/joinlobby${localJoincode}`, 
+    fetch(`https://lection-backend.fly.dev/joinlobby${localJoincode}`, 
   {
       method: "POST", 
       body: JSON.stringify(bodyContent),
@@ -84,7 +84,7 @@
       }
     })
     //error checking response
-    .then( response => {
+    .then( async (response) => {
       if (!response.ok) {
         errorPassed = true
         setStatusText("PIN not recognized", 'text-red-800')
@@ -93,6 +93,16 @@
         },1700)
         throw new Error(`Unable to find a lobby using the submitted lobby joincode`)
       }
+      const data = await response.json();
+      if (data.joined === false) {
+        errorPassed = true
+        setStatusText("Cannot join an active Lectionary", 'text-red-800')
+        setTimeout(() => {
+        setStatusText()
+        },1700)
+        throw new Error(`Unable to join a lobby that is currently running`)
+      }
+      console.log(data)
       return response
     })
     //begins SSE connection with lobbyClientCom()
@@ -121,7 +131,7 @@
 
     //Starts listening to SSE from the backend to update prompts
     async function lobbyClientCom() {
-      const source = new EventSource(`http://localhost:5313/lobbyclient${joincodeField}${username}`)
+      const source = new EventSource(`https://lection-backend.fly.dev/lobbyclient${joincodeField}${username}`)
 
       source.addEventListener('message', message => {
         let response = JSON.parse(message.data)
@@ -148,6 +158,7 @@
   //to leave the lobby (not done)
   function leaveLobby() {
     console.log('left the lobby')
+    location.reload();
   }
   //handles submitting data back to the database
   function submitResponse() {
@@ -160,7 +171,7 @@
       promptIndex: currentPrompt
     }
   //submit asnwer to mongodb
-    fetch(`http://localhost:5313/clientsubmitresponse${joincodeField}${username}`, 
+    fetch(`https://lection-backend.fly.dev/clientsubmitresponse${joincodeField}${username}`, 
   {
       method: "POST", 
       body: JSON.stringify(asnwerContent),
