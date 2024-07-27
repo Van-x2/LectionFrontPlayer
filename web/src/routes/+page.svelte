@@ -36,6 +36,7 @@
   let lobbyPreStartCard
   let promptContent
   let ResponseSubmittedCard
+  let contentWindow
 
   
   onMount(() => {
@@ -57,9 +58,41 @@
   lobbyPreStartCard = document.getElementById('lobbyPreStartCard')
   promptContent = document.getElementById('promptContent')
   ResponseSubmittedCard = document.getElementById('ResponseSubmittedCard')
+  contentWindow = document.getElementById('window')
   
   loadPossibleUsername()
+  if (isMobile()) {
+  console.log("Mobile device detected");
+  // Your code for mobile devices
+} else {
+  if(window.innerWidth >= 400) {
+    console.log("Desktop device detected");
+    openNewWindow()
+  }
+
+}
   })
+
+  //check if client is desktop or mobile
+  function isMobile() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+  // Check for mobile devices
+  if (/android/i.test(userAgent)) {
+    return true;
+  }
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return true;
+  }
+  return false;
+}
+  //opens the webpage in a seperate window (for desktop users only)
+  function openNewWindow() {
+    contentWindow.classList.add('opacity-0')
+      const url = 'http://127.0.0.1:5315/';
+      const windowFeatures = 'width=350,height=600,right=50,top=300,toolbar=no,menubar=no,resizable=no,status=no';
+      window.open(url, '_blank', windowFeatures);
+    }
 
 //For communicating with backend
   //handles majoriy of the backend communication
@@ -309,7 +342,7 @@
 
 </script>
 
-<div id="window" class="w-screen h-[100svh] bg-gray1 select-none">
+<div id="window" class="w-screen h-[100svh] bg-gray1 select-none absolute">
   <div class="w-full h-full flex flex-col">
     <div id="topWrapper" class=" w-full h-[190px]">
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
@@ -589,6 +622,16 @@
     </div>
   </div>
   
+</div>
+<div id="hiddenWindow" class="w-screen h-[100svh] absolute bg-gray1">
+<div class="w-full h-full flex justify-center items-center">
+<p class=" text-[20px font-normal font-semibold text-neutral-700 text-center">
+  Website opened in a new window
+  <br>
+  <br>
+  This tab is now safe to close
+</p>
+</div>
 </div>
 
 <style lang="postcss">
