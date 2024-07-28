@@ -590,7 +590,7 @@
                               {currentPrompt + 1}
                             </div>
                             <div class="w-full h-1/2 flex justify-center">
-                              <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[13px] font-normal font-semibold text-center">
+                              <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[14px] font-normal font-semibold text-center  -translate-y-[20px]">
                                 This is a mockup prompt, what do you think, what are your thoughts?
                               </p>
                             </div>
