@@ -91,7 +91,7 @@
   //opens the webpage in a seperate window (for desktop users only)
   function openNewWindow() {
     contentWindow.classList.add('opacity-0')
-      const url = 'http://127.0.0.1:5315/';
+      const url = 'https://www.lection.ing/';
       const windowFeatures = 'width=350,height=600,right=50,top=300,toolbar=no,menubar=no,resizable=no,status=no';
       window.open(url, '_blank', windowFeatures);
   }
