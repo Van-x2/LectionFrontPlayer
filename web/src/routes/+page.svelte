@@ -405,7 +405,7 @@
                 <span>Reset Username</span>
               </div>
             </button>
-            <button class="w-full h-[45%] mt-2" on:click={leaveLobby()}>
+            <button class="w-full h-[45%] mt-2" on:click={leaveLobby}>
               <div class="w-full h-full bg-secondary rounded-[13px] flex text-neutral-800 justify-center items-center shadow-inner">
                 <span>Leave the Lectionary</span>
               </div>
