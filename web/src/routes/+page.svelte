@@ -6,6 +6,7 @@
     //Used for holding users username
     let usernameField = ''
     let username = ''
+    let userID = ''
     //Used to hold the current joincode
     let joincodeField = ''
     let joincode = ''
@@ -61,6 +62,7 @@
   contentWindow = document.getElementById('window')
   
   loadPossibleUsername()
+
   if (isMobile()) {
   console.log("Mobile device detected");
   // Your code for mobile devices
@@ -251,24 +253,34 @@
   //function to load username from cookie
   function loadPossibleUsername() {
     if(mountedDocument.cookie) {
-      let cookieUsername = mountedDocument.cookie.split('=')[1]
+      let cookieUsername = getCookie('username')
+      let cookieUserID = getCookie('userID')
       usernameInputCard.classList.add('translate-y-[700px]')
       usernameInputCardParent.classList.add('pointer-events-none')
+      userID = cookieUserID
       username = cookieUsername
       usernameField = cookieUsername
-      
+      console.log(userID)
     }
   }
+  function getCookie(name) {
+    const value = `; ${mountedDocument.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
   //function to add username to temp storage and to the cookie
   function submitUsername() {
     //defines permanent username using the temp usernameField var
     username = usernameField.trim()
+    userID = generateID()
 
 
     //Adds username to the cookie & makes sure it wont expire for a long LONG time
     const farFutureDate = new Date()
     farFutureDate.setFullYear(farFutureDate.getFullYear() + 100); // Setting the expiry date 100 years in the future
     document.cookie = `username=${username}; expires=${farFutureDate.toUTCString()}; path=/`
+    document.cookie = `userID=${userID}; expires=${farFutureDate.toUTCString()}; path=/`
 
     //slides the card out of view
     usernameInputCard.classList.add('translate-y-[700px]')
@@ -279,14 +291,21 @@
     menuIconClicked()
     //clears the username var
     username = ''
+    userID = ''
 
     //clears username cookie
     document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
+    document.cookie = 'userID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
 
     //slides card back into view
     usernameInputCard.classList.remove('translate-y-[700px]')
     usernameInputCardParent.classList.remove('pointer-events-none')
   }
+  //generates the userID
+  function generateID() {
+    return Math.floor(100000 + Math.random() * 900000).toString()
+  }
+
   //function to change the status text near the PIN input area
   function setStatusText(string = '', color = 'text-primary') {
     if(string === '') {
@@ -344,7 +363,7 @@
 
 <div id="window" class="w-screen h-[100svh] bg-gray1 select-none absolute">
   <div class="w-full h-full flex flex-col">
-    <div id="topWrapper" class=" w-full h-[190px]">
+    <div id="topWrapper" class=" w-full h-[190px] relative z-20">
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
         <div class="w-full h-full flex relative">
           <div class="h-16 w-16 bg-primary flex items-center justify-center">
@@ -387,7 +406,7 @@
               </div>
             </button>
             <button class="w-full h-[45%] mt-2">
-              <div class="w-full h-full bg-darkred rounded-[13px] flex text-white justify-center items-center">
+              <div class="w-full h-full bg-secondary rounded-[13px] flex text-neutral-800 justify-center items-center shadow-inner">
                 <span>Leave the Lectionary</span>
               </div>
             </button>
@@ -395,7 +414,7 @@
         </div>
       </div>
     </div>
-    <div id="bottomWrapper" class="flex-grow w-full">
+    <div id="bottomWrapper" class="flex-grow w-full relative z-10">
       <div class="w-full h-full relative">
         <div id="usernameInputCardParent" class="w-full h-full absolute z-50">
           <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms] ">
