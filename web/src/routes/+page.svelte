@@ -167,7 +167,7 @@
 
     //Starts listening to SSE from the backend to update prompts
     async function lobbyClientCom() {
-      const source = new EventSource(`https://lection-backend.fly.dev/lobbyclient${joincodeField}${username}`)
+      const source = new EventSource(`https://lection-backend.fly.dev/lobbyclient${joincodeField}${username}${userID}`)
 
       source.addEventListener('message', message => {
         let response = JSON.parse(message.data)
