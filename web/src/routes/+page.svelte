@@ -206,7 +206,7 @@
       promptIndex: currentPrompt
     }
   //submit asnwer to mongodb
-    fetch(`https://lection-backend.fly.dev/clientsubmitresponse${joincodeField}${username}`, 
+    fetch(`https://lection-backend.fly.dev/clientsubmitresponse${joincodeField}${username}${userID}`, 
   {
       method: "POST", 
       body: JSON.stringify(asnwerContent),
