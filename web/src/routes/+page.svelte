@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte'
-  import { scale } from 'svelte/transition';
 
   //variables used for collecting data from input forms
     //Used for holding users username
@@ -62,16 +61,6 @@
   contentWindow = document.getElementById('window')
   
   loadPossibleUsername()
-
-  if (isMobile()) {
-  console.log("Mobile device detected");
-  // Your code for mobile devices
-} else {
-  if(window.innerWidth >= 400) {
-    openNewWindow()
-  }
-
-}
   })
 
   //check if client is desktop or mobile
@@ -87,13 +76,16 @@
   }
   return false;
   }
+  /*
   //opens the webpage in a seperate window (for desktop users only)
   function openNewWindow() {
     contentWindow.classList.add('opacity-0')
       const url = 'https://www.lection.ing/';
       const windowFeatures = 'width=350,height=600,right=50,top=300,toolbar=no,menubar=no,resizable=no,status=no';
       window.open(url, '_blank', windowFeatures);
+  
   }
+*/
 
 //For communicating with backend
   //handles majoriy of the backend communication
@@ -422,7 +414,10 @@
               <div class="w-full h-2/3">
                 <div class="w-full h-[45%] ">
                   <div class="w-full h-full flex justify-center items-center">
-                    <p class=" text-primary font-title font-bold italic text-[60px]">
+                    <p class=" text-primary font-title font-bold italic text-[60px] translate-x-[2px] absolute z-20">
+                      Lection
+                    </p>
+                    <p class=" text-secondary font-title font-bold italic text-[60px] absolute z-10">
                       Lection
                     </p>
                   </div>
