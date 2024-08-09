@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
 
+  //test
   //variables used for collecting data from input forms
     //Used for holding users username
     let usernameField = ''
@@ -80,7 +81,7 @@
   //opens the webpage in a seperate window (for desktop users only)
   function openNewWindow() {
     contentWindow.classList.add('opacity-0')
-      const url = 'https://www.lection.ing/';
+      const url = 'http://127.0.0.1:5315/';
       const windowFeatures = 'width=350,height=600,right=50,top=300,toolbar=no,menubar=no,resizable=no,status=no';
       window.open(url, '_blank', windowFeatures);
   
@@ -247,7 +248,7 @@
     if(mountedDocument.cookie) {
       let cookieUsername = getCookie('username')
       let cookieUserID = getCookie('userID')
-      usernameInputCard.classList.add('translate-y-[700px]')
+      usernameInputCard.classList.add('translate-y-[1000px]')
       usernameInputCardParent.classList.add('pointer-events-none')
       userID = cookieUserID
       username = cookieUsername
@@ -275,7 +276,7 @@
     document.cookie = `userID=${userID}; expires=${farFutureDate.toUTCString()}; path=/`
 
     //slides the card out of view
-    usernameInputCard.classList.add('translate-y-[700px]')
+    usernameInputCard.classList.add('translate-y-[1000px]')
     usernameInputCardParent.classList.add('pointer-events-none')
   }
   //function to clear the username from the cookie and temp storage
@@ -290,7 +291,7 @@
     document.cookie = 'userID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'
 
     //slides card back into view
-    usernameInputCard.classList.remove('translate-y-[700px]')
+    usernameInputCard.classList.remove('translate-y-[1000px]')
     usernameInputCardParent.classList.remove('pointer-events-none')
   }
   //generates the userID
@@ -354,7 +355,7 @@
 </script>
 
 <div id="window" class="w-screen h-[100svh] bg-gray1 select-none absolute">
-  <div class="w-full h-full flex flex-col">
+  <div class="w-full h-full flex flex-col items-center">
     <div id="topWrapper" class=" w-full h-[190px] relative z-20">
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
         <div class="w-full h-full flex relative">
@@ -390,7 +391,7 @@
         </div>
       </div>
       <div id="menu" class="w-full h-[115px] flex justify-center z-9  transition-all -translate-y-40 duration-300 absolute">
-        <div class="w-[99%] h-full bg-gray2 border-b-[4px] border-x-[4px] border-neutral-800 rounded-br-[25px] rounded-bl-[25px] px-[8px] py-[7px]">
+        <div class="md:w-[400px] w-full h-full bg-gray2 border-b-[4px] border-x-[4px] border-neutral-800 rounded-br-[25px] rounded-bl-[25px] px-[8px] py-[7px]">
           <div class="w-full h-full font-normal font-semibold text-[13px] relative">
             <button class="w-full h-[45%]" on:click={clearUsername}>
               <div class="w-full h-full bg-neutral-800 rounded-[13px] flex text-white justify-center items-center">
@@ -406,246 +407,237 @@
         </div>
       </div>
     </div>
-    <div id="bottomWrapper" class="flex-grow w-full relative z-10">
-      <div class="w-full h-full relative">
-        <div id="usernameInputCardParent" class="w-full h-full absolute z-50">
-          <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms] ">
-            <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
-              <div class="w-full h-2/3">
-                <div class="w-full h-[45%] ">
-                  <div class="w-full h-full flex justify-center items-center">
-                    <p class=" text-primary font-title font-bold italic text-[60px] translate-x-[2px] absolute z-20">
-                      Lection
-                    </p>
-                    <p class=" text-secondary font-title font-bold italic text-[60px] absolute z-10">
-                      Lection
-                    </p>
-                  </div>
-                </div>
-                <div class="w-full h-[55%] flex justify-center">
-                  <div class="w-[90%] h-[90%] ">
-                    <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
-                      <div class="w-full h-full flex flex-col">
-                        <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
-                          <input 
-                            type="text" 
-                            class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
-                            placeholder="Username"
-                            bind:value={usernameField}
-                          >
-                        </div>
-                        <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
-                          <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
-                            <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
-                              <p>
-                                Enter
-                              </p>
-                            </div>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-full h-1/3 relative text-neutral-800">
-                <div class="w-full h-[120px] bottom-0 absolute">
-                  <div class="w-full h-[80%] ">
-                    <div class="w-full h-full flex justify-center items-end">
-                      <div class="w-2/3 h-[50%]">
-                        <p class="  font-normal text-[14px] text-center">
-                          Create your own Lectionary for FREE at 
-                          <span class="font-semibold ">
-                            <a href="http://lection.cc/" target="_blank">
-                              Lection.cc
-                            </a>
-                          </span> 
+    <div id="bottomWrapper" class="flex-grow w-full lg:w-1/2 md:w-3/4 sm:w-full relative z-10 bg-green-300 flex">
+      <div class="h-full w-full">
+        <div class="w-full h-full">
+          <div class="w-full h-full relative">
+            <div id="usernameInputCardParent" class="w-full h-full absolute z-50">
+              <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms] ">
+                <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
+                  <div class="w-full h-2/3">
+                    <div class="w-full h-[45%] ">
+                      <div class="w-full h-full flex justify-center items-center">
+                        <p class=" font-title font-bold italic text-[60px] translate-x-[2px] absolute z-20 bg-gradient-to-r from-cyan-800 to-sky-900 bg-clip-text text-transparent">
+                          Lection
                         </p>
                       </div>
                     </div>
-                  </div>
-                  <div class="w-full h-[20%] flex font-normal font-semibold text-[14px]">
-                    <div class="w-1/3 h-full text-left pl-4">
-                      <button>
-                        Terms
-                      </button>
-                    </div>
-                    <div class="w-1/3 h-full text-center">
-                      <button>
-                        Privacy
-                      </button>
-                    </div>
-                    <div class="w-1/3 h-full  text-right pr-4">
-                      <button>
-                        Cookies
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="w-full h-full absolute">
-          <div id="OtherScreens" class=" w-full h-full relative">
-            <div id="lobbyJoinCard" class="w-full h-full flex flex-col justify-end absolute z-40 bg-gray1 transition-all duration-300">
-              <div class="w-full h-[25%] ">
-                <div class="w-full h-full flex justify-center items-center">
-                  <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
-                    Join a lectionary using an educator-provided PIN.
-                  </p>
-                </div>
-              </div>
-              <div class="w-full h-[60%] ">
-                <div class="w-full h-[60%] flex justify-center items-center">
-                  <div class="w-[90%] h-[90%]">
-                    <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
-                      <div class="w-full h-full flex flex-col">
-                        <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
-                          <input 
-                            type="text"
-                            inputmode="decimal" 
-                            class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
-                            placeholder="Lectionary PIN"
-                            bind:value={joincodeField}
-                          >
-                        </div>
-                        <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={joincodeSubmit}>
-                          <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
-                            <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
-                              <p>
-                                Enter
-                              </p>
+                    <div class="w-full h-[55%] flex justify-center">
+                      <div class="w-[90%] h-[90%] ">
+                        <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
+                          <div class="w-full h-full flex flex-col">
+                            <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
+                              <input 
+                                type="text" 
+                                class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                                placeholder="Username"
+                                bind:value={usernameField}
+                              >
                             </div>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="w-full h-[40%] flex flex-col justify-start items-center pt-2 ">
-                  <p id="statusText" class="text-center w-2/3 font-normal text-primary text-[18px] font-semibold transition-all duration-500 opacity-0">
-                    This is some status text
-                  </p>
-                </div>
-              </div>
-              <div class="w-full h-[15%] flex justify-center items-center">
-                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
-                  Create your own Lectionary for FREE at
-                  <span class="font-bold">
-                    <a href="http://lection.cc/" target="_blank">
-                      Lection.cc
-                    </a>
-                  </span>  
-                </p>
-              </div>
-            </div>
-            <div id="lobbyPreStartCard" class="w-full h-full flex flex-col justify-end absolute z-30 bg-gray1 transition-all duration-300">
-              <div class="w-full h-[60%]">
-                <div class="w-full h-full flex justify-center items-center">
-                  <div class="w-[90%] h-fit p-8 flex justify-center items-center bg-white rounded-[20px] border-2 border-secondary shadow-xl">
-                    <p class="text-center w-[90%] text-[18px] text-neutral-800 font-normal font-semibold ">
-                      Joined the Lectionary
-                      <br>
-                      <br>
-                      Waiting for the educator to begin...
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="w-full h-[25%] ">
-              </div>
-              <div class="w-full h-[15%] flex justify-center items-center">
-                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
-                  Create your own Lectionary for FREE at
-                  <span class="font-bold pointer-events-auto">
-                    <a href="http://lection.cc/" target="_blank">
-                      Lection.cc
-                    </a>
-                  </span>  
-                </p>
-              </div>
-            </div>
-            <div id="ResponseSubmittedCard" class="w-full h-full flex justify-center items-center absolute z-20 bg-gray1 transition-all duration-300 opacity-0 pointer-events-none">
-              <div class="w-full h-full flex justify-center items-center">
-                <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
-                  Response Submitted
-                </p>
-              </div>
-            </div>
-            <div id="lobbyHappeningCard" class="w-full h-full flex flex-col justify-start absolute z-10 bg-gray1 transition-all duration-300">
-              <div class="w-full h-[95%]">
-                <div class="w-full h-full flex justify-center items-center">
-                  <div class="w-[90%] h-[100%]">
-                    <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[12px] px-[12px]">
-                      <div class="w-full h-full flex flex-col p-[5px]">
-                        <div class="w-full h-[65%]">
-                          <div class="w-full h-1/3  flex items-center justify-center  flex-col pb-4">
-                            <div class="w-full h-1/2 font-normal text-[20px] font-semibold -translate-x-[3px] -translate-y-[8px] text-secondary">
-                              {currentPrompt + 1}
-                            </div>
-                            <div class="w-full h-1/2 flex justify-center">
-                              <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[16px] font-normal font-semibold text-center  -translate-y-[20px]">
-                                This is a mockup prompt, what do you think, what are your thoughts?
-                              </p>
-                            </div>
-                          </div>
-                          <div class="w-full h-2/3 pb-2">
-                          <div class="w-full h-full">
-                            <textarea 
-                            class="w-full h-full text-[14px] font-normal border-2 border-accent focus:border-[4px] text-accent rounded-[10px] focus:outline-none transition-all duration-75 p-2" 
-                            placeholder="Enter response here"
-                            bind:value={promptResponseField}
-                          />
-                          </div>
-                          </div>
-                        </div>
-                        <div class="w-full h-[35%]">
-                          <div class="w-full h-[68%]">
-                            <div class="w-full h-[50%]">
-                              <p class=" text-neutral-700 text-center text-[13px] font-normal font-semibold">How confident are you in this response?</p>
-                              <p class=" text-accent text-center text-[18px] font-normal font-semibold">{confidenceValue}/5</p>
-                            </div>
-                            <div class="w-full h-[50%] ">
-                              <div class="w-full h-full flex justify-center items-center">
-                                <input id="confidenceSlider" class="w-[90%]" type="range" step="1" min="1" max="5" bind:value={confidenceValue}>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="w-full h-[32%] ">
-                            <button class="w-[100%] h-[100%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitResponse}>
-                              <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 translate-y-[7px]">
-                                <div class="w-full h-full flex items-center justify-center text-white text-[14px] font-normal">
+                            <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitUsername}>
+                              <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
+                                <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
                                   <p>
                                     Enter
                                   </p>
                                 </div>
+                              </div>
                             </button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <div class="w-full h-1/3 relative text-neutral-800">
+                    <div class="w-full h-[120px] bottom-0 absolute">
+                      <div class="w-full h-[80%] ">
+                        <div class="w-full h-full flex justify-center items-end">
+                          <div class="w-2/3 h-[50%]">
+                            <p class="  font-normal text-[14px] text-center">
+                              Create your own Lectionary for FREE at 
+                              <span class="font-semibold ">
+                                <a href="http://lection.cc/" target="_blank">
+                                  Lection.cc
+                                </a>
+                              </span> 
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="w-full h-[20%] flex font-normal font-semibold text-[14px]">
+                        <div class="w-1/3 h-full text-left pl-4">
+                          <button>
+                            Terms
+                          </button>
+                        </div>
+                        <div class="w-1/3 h-full text-center">
+                          <button>
+                            Privacy
+                          </button>
+                        </div>
+                        <div class="w-1/3 h-full  text-right pr-4">
+                          <button>
+                            Cookies
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
+            <div class="w-full h-full absolute">
+              <div id="OtherScreens" class=" w-full h-full relative">
+                <div id="lobbyJoinCard" class="w-full h-full flex flex-col justify-end absolute z-40 bg-gray1 transition-all duration-300">
+                  <div class="w-full h-[25%] ">
+                    <div class="w-full h-full flex justify-center items-center">
+                      <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
+                        Join a lectionary using an educator-provided PIN.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-full h-[60%] ">
+                    <div class="w-full h-[60%] flex justify-center items-center">
+                      <div class="w-[90%] h-[90%]">
+                        <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[8px] px-[14px]">
+                          <div class="w-full h-full flex flex-col">
+                            <div class="w-[100] h-[44%] rounded-[10px] mb-2 mt-[7px]">
+                              <input 
+                                type="text"
+                                inputmode="decimal" 
+                                class="w-full h-full text-[18px] font-normal border-2 border-accent focus:border-[4px] text-accent text-center rounded-[10px] focus:outline-none transition-all duration-75" 
+                                placeholder="Lectionary PIN"
+                                bind:value={joincodeField}
+                              >
+                            </div>
+                            <button class="w-[100%] h-[44%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={joincodeSubmit}>
+                              <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 ">
+                                <div class="w-full h-full flex items-center justify-center text-white text-[18px] font-normal">
+                                  <p>
+                                    Enter
+                                  </p>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-full h-[40%] flex flex-col justify-start items-center pt-2 ">
+                      <p id="statusText" class="text-center w-2/3 font-normal text-primary text-[18px] font-semibold transition-all duration-500 opacity-0">
+                        This is some status text
+                      </p>
+                    </div>
+                  </div>
+                  <div class="w-full h-[15%] flex justify-center items-center">
+                    <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
+                      Create your own Lectionary for FREE at
+                      <span class="font-bold">
+                        <a href="http://lection.cc/" target="_blank">
+                          Lection.cc
+                        </a>
+                      </span>  
+                    </p>
+                  </div>
+                </div>
+                <div id="lobbyPreStartCard" class="w-full h-full flex flex-col justify-end absolute z-30 bg-gray1 transition-all duration-300">
+                  <div class="w-full h-[60%]">
+                    <div class="w-full h-full flex justify-center items-center">
+                      <div class="w-[90%] h-fit p-8 flex justify-center items-center bg-white rounded-[20px] border-2 border-secondary shadow-xl">
+                        <p class="text-center w-[90%] text-[18px] text-neutral-800 font-normal font-semibold ">
+                          Joined the Lectionary
+                          <br>
+                          <br>
+                          Waiting for the educator to begin...
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="w-full h-[25%] ">
+                  </div>
+                  <div class="w-full h-[15%] flex justify-center items-center">
+                    <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
+                      Create your own Lectionary for FREE at
+                      <span class="font-bold pointer-events-auto">
+                        <a href="http://lection.cc/" target="_blank">
+                          Lection.cc
+                        </a>
+                      </span>  
+                    </p>
+                  </div>
+                </div>
+                <div id="ResponseSubmittedCard" class="w-full h-full flex justify-center items-center absolute z-20 bg-gray1 transition-all duration-300 opacity-0 pointer-events-none">
+                  <div class="w-full h-full flex justify-center items-center">
+                    <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
+                      Response Submitted
+                    </p>
+                  </div>
+                </div>
+                <div id="lobbyHappeningCard" class="w-full h-full flex flex-col justify-start absolute z-10 bg-gray1 transition-all duration-300">
+                  <div class="w-full h-[95%]">
+                    <div class="w-full h-full flex justify-center items-center">
+                      <div class="w-[90%] h-[100%]">
+                        <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[12px] px-[12px]">
+                          <div class="w-full h-full flex flex-col p-[5px]">
+                            <div class="w-full h-[65%]">
+                              <div class="w-full h-1/3  flex items-center justify-center  flex-col pb-4">
+                                <div class="w-full h-1/2 font-normal text-[20px] font-semibold -translate-x-[3px] -translate-y-[8px] text-secondary">
+                                  {currentPrompt + 1}
+                                </div>
+                                <div class="w-full h-1/2 flex justify-center">
+                                  <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[14px] font-normal font-semibold text-center  -translate-y-[20px]">
+                                    This is a mockup prompt, what do you think, what are your thoughts?
+                                  </p>
+                                </div>
+                              </div>
+                              <div class="w-full h-2/3 pb-2">
+                              <div class="w-full h-full">
+                                <textarea 
+                                class="w-full h-full text-[14px] font-normal border-2 border-accent focus:border-[4px] text-accent rounded-[10px] focus:outline-none transition-all duration-75 p-2" 
+                                placeholder="Enter response here"
+                                bind:value={promptResponseField}
+                              />
+                              </div>
+                              </div>
+                            </div>
+                            <div class="w-full h-[35%]">
+                              <div class="w-full h-[68%]">
+                                <div class="w-full h-[50%]">
+                                  <p class=" text-neutral-700 text-center text-[13px] font-normal font-semibold">How confident are you in this response?</p>
+                                  <p class=" text-accent text-center text-[18px] font-normal font-semibold">{confidenceValue}/5</p>
+                                </div>
+                                <div class="w-full h-[50%] ">
+                                  <div class="w-full h-full flex justify-center items-center">
+                                    <input id="confidenceSlider" class="w-[90%]" type="range" step="1" min="1" max="5" bind:value={confidenceValue}>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="w-full h-[32%] ">
+                                <button class="w-[100%] h-[100%] group mb-2 active:translate-y-[2px] transition duration-75" on:click={submitResponse}>
+                                  <div class="w-full h-full rounded-[10px] bg-neutral-800 group-active:bg-neutral-900 transition duration-75 mb-2 translate-y-[7px]">
+                                    <div class="w-full h-full flex items-center justify-center text-white text-[14px] font-normal">
+                                      <p>
+                                        Enter
+                                      </p>
+                                    </div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   
-</div>
-<div id="hiddenWindow" class="w-screen h-[100svh] absolute bg-gray1">
-<div class="w-full h-full flex justify-center items-center">
-<p class=" text-[20px font-normal font-semibold text-neutral-700 text-center">
-  Website opened in a new window
-  <br>
-  <br>
-  This tab is now safe to close
-</p>
-</div>
 </div>
 
 <style lang="postcss">
