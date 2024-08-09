@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
 
+  //test
   //variables used for collecting data from input forms
     //Used for holding users username
     let usernameField = ''
@@ -80,7 +81,7 @@
   //opens the webpage in a seperate window (for desktop users only)
   function openNewWindow() {
     contentWindow.classList.add('opacity-0')
-      const url = 'https://www.lection.ing/';
+      const url = 'http://127.0.0.1:5315/';
       const windowFeatures = 'width=350,height=600,right=50,top=300,toolbar=no,menubar=no,resizable=no,status=no';
       window.open(url, '_blank', windowFeatures);
   
@@ -597,64 +598,6 @@
                                 bind:value={promptResponseField}
                               />
                               </div>
-              </div>
-              <div class="w-full h-[25%] ">
-              </div>
-              <div class="w-full h-[15%] flex justify-center items-center">
-                <p class="w-2/3 text-center text-[14px] font-normal text-neutral-800">
-                  Create your own Lectionary for FREE at
-                  <span class="font-bold pointer-events-auto">
-                    <a href="http://lection.cc/" target="_blank">
-                      Lection.cc
-                    </a>
-                  </span>  
-                </p>
-              </div>
-            </div>
-            <div id="ResponseSubmittedCard" class="w-full h-full flex justify-center items-center absolute z-20 bg-gray1 transition-all duration-300 opacity-0 pointer-events-none">
-              <div class="w-full h-full flex justify-center items-center">
-                <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
-                  Response Submitted
-                </p>
-              </div>
-            </div>
-            <div id="lobbyHappeningCard" class="w-full h-full flex flex-col justify-start absolute z-10 bg-gray1 transition-all duration-300">
-              <div class="w-full h-[95%]">
-                <div class="w-full h-full flex justify-center items-center">
-                  <div class="w-[90%] h-[100%]">
-                    <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[12px] px-[12px]">
-                      <div class="w-full h-full flex flex-col p-[5px]">
-                        <div class="w-full h-[65%]">
-                          <div class="w-full h-1/3  flex items-center justify-center  flex-col pb-4">
-                            <div class="w-full h-1/2 font-normal text-[20px] font-semibold -translate-x-[3px] -translate-y-[8px] text-secondary">
-                              {currentPrompt + 1}
-                            </div>
-                            <div class="w-full h-1/2 flex justify-center">
-                              <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[16px] font-normal font-semibold text-center  -translate-y-[20px]">
-                                This is a mockup prompt, what do you think, what are your thoughts?
-                              </p>
-                            </div>
-                          </div>
-                          <div class="w-full h-2/3 pb-2">
-                          <div class="w-full h-full">
-                            <textarea 
-                            class="w-full h-full text-[14px] font-normal border-2 border-accent focus:border-[4px] text-accent rounded-[10px] focus:outline-none transition-all duration-75 p-2" 
-                            placeholder="Enter response here"
-                            bind:value={promptResponseField}
-                          />
-                          </div>
-                          </div>
-                        </div>
-                        <div class="w-full h-[35%]">
-                          <div class="w-full h-[68%]">
-                            <div class="w-full h-[50%]">
-                              <p class=" text-neutral-700 text-center text-[13px] font-normal font-semibold">How confident are you in this response?</p>
-                              <p class=" text-accent text-center text-[18px] font-normal font-semibold">{confidenceValue}/5</p>
-                            </div>
-                            <div class="w-full h-[50%] ">
-                              <div class="w-full h-full flex justify-center items-center">
-                                <input id="confidenceSlider" class="w-[90%]" type="range" step="1" min="1" max="5" bind:value={confidenceValue}>
-
                               </div>
                             </div>
                             <div class="w-full h-[35%]">
