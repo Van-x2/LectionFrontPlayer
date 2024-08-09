@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte'
 
-  //test
+  
   //variables used for collecting data from input forms
     //Used for holding users username
     let usernameField = ''
