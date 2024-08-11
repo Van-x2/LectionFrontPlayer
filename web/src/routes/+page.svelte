@@ -347,6 +347,8 @@
 
   //enables the leaveLobbyBtn
   leaveLobbyBtn.disabled = false
+  //disables the clearUsernameBtn
+  clearUsernameBtn.disabled = true
   }
 
   function startLobby() {
