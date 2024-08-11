@@ -38,6 +38,8 @@
   let promptContent
   let ResponseSubmittedCard
   let contentWindow
+  let leaveLobbyBtn
+  let clearUsernameBtn
 
   
   onMount(() => {
@@ -60,6 +62,8 @@
   promptContent = document.getElementById('promptContent')
   ResponseSubmittedCard = document.getElementById('ResponseSubmittedCard')
   contentWindow = document.getElementById('window')
+  clearUsernameBtn = document.getElementById('clearUsernameBtn')
+  leaveLobbyBtn = document.getElementById('leaveLobbyBtn')
   
   loadPossibleUsername()
   })
@@ -254,6 +258,8 @@
       username = cookieUsername
       usernameField = cookieUsername
       console.log(userID)
+      //enables clearUsernameBtn
+      clearUsernameBtn.disabled = false
     }
   }
   function getCookie(name) {
@@ -278,6 +284,9 @@
     //slides the card out of view
     usernameInputCard.classList.add('translate-y-[1000px]')
     usernameInputCardParent.classList.add('pointer-events-none')
+
+    //enables the clearUsernameBtn
+    clearUsernameBtn.disabled = false
   }
   //function to clear the username from the cookie and temp storage
   function clearUsername() {
@@ -293,11 +302,15 @@
     //slides card back into view
     usernameInputCard.classList.remove('translate-y-[1000px]')
     usernameInputCardParent.classList.remove('pointer-events-none')
+
+    //disables clearUsernameBtn
+    clearUsernameBtn.disabled = true
   }
   //generates the userID
   function generateID() {
     return Math.floor(100000 + Math.random() * 900000).toString()
   }
+
 
   //function to change the status text near the PIN input area
   function setStatusText(string = '', color = 'text-primary') {
@@ -331,6 +344,9 @@
   console.log('Lobby joined')
   lobbyJoinCard.classList.add('opacity-0')
   lobbyJoinCard.classList.add('pointer-events-none')
+
+  //enables the leaveLobbyBtn
+  leaveLobbyBtn.disabled = false
   }
 
   function startLobby() {
@@ -393,13 +409,13 @@
       <div id="menu" class="w-full h-[115px] flex justify-center z-9  transition-all -translate-y-40 duration-300 absolute">
         <div class="md:w-[400px] w-full h-full bg-gray2 border-b-[4px] border-x-[4px] border-neutral-800 rounded-br-[25px] rounded-bl-[25px] px-[8px] py-[7px]">
           <div class="w-full h-full font-normal font-semibold text-[13px] relative">
-            <button class="w-full h-[45%]" on:click={clearUsername}>
-              <div class="w-full h-full bg-neutral-800 rounded-[13px] flex text-white justify-center items-center">
+            <button id="clearUsernameBtn" class="w-full h-[45%] bg-neutral-800 rounded-[13px]" on:click={clearUsername} disabled="true">
+              <div class="w-full h-full flex text-white justify-center items-center">
                 <span>Reset Username</span>
               </div>
             </button>
-            <button class="w-full h-[45%] mt-2" on:click={leaveLobby}>
-              <div class="w-full h-full bg-secondary rounded-[13px] flex text-neutral-800 justify-center items-center shadow-inner">
+            <button id="leaveLobbyBtn" class="w-full h-[45%] mt-2 bg-secondary rounded-[13px]" on:click={leaveLobby} disabled="true">
+              <div class="w-full h-full flex text-neutral-800 justify-center items-center shadow-inner">
                 <span>Leave the Lectionary</span>
               </div>
             </button>
