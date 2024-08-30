@@ -698,4 +698,7 @@
   cursor: pointer;
   border: 0cm;
 }
+.disable-triple-tap-zoom {
+  touch-action: manipulation;
+}
 </style>
