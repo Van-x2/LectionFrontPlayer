@@ -378,7 +378,9 @@
       <div id="nav" class="w-full h-16 relative bg-white shadow-lg z-10">
         <div class="w-full h-full flex relative">
           <div class="h-16 w-16 bg-primary flex items-center justify-center">
-            <span class=" text-white text-[50px] font-title font-bold italic absolute">L</span>
+            <span class=" text-white text-[50px] font-title absolute">
+              L
+            </span>
             <div class="w-full h-full relative">
               <div class="w-4 h-4 absolute bottom-[4px] right-[4px]">
                 <div class="w-full h-full relative">
@@ -388,9 +390,9 @@
               </div>
             </div>
           </div>
-          <div class="h-16 w-fit p-4 pl-4">
+          <div class="h-16 w-fit p-4 pl-[10px]">
             <div class="w-full h-full flex items-center">
-              <p class=" text-primary font-title font-bold italic text-[27px]">
+              <p class=" text-primary font-title text-[30px]">
               {username}
               </p>
             </div>
@@ -435,7 +437,7 @@
                   <div class="w-full h-2/3">
                     <div class="w-full h-[45%] ">
                       <div class="w-full h-full flex justify-center items-center">
-                        <p class=" font-title font-bold italic text-[60px] translate-x-[2px] absolute z-20 bg-gradient-to-r from-cyan-800 to-sky-900 bg-clip-text text-transparent">
+                        <p class=" font-title font-bold italic text-[60px] translate-x-[2px] absolute z-20 text-primary">
                           Lection
                         </p>
                       </div>
