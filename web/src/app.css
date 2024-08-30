@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: 'Title';
+	src: url('/fonts/LibreCaslonText-BoldItalic.ttf') format('woff2');
+	font-weight: 400;
+}

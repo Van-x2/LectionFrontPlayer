@@ -12,14 +12,32 @@ export default {
         'gray1': '#efefef',
         'gray2': '#d9d9d9',
         'darkred': '#5f1111',
+        'darkgray': '#353535',
       },
       fontFamily: {
-        'title': ['Libre Caslon Text', 'serif'],
+        'title': ['Title', 'serif'],
         'normal': ['Libre Caslon Text', 'serif'],
+        'poppins': ['Poppins', 'sans-serif']
       },
       animation: {
         slowPulse: 'pulse 3s infinite',
         fastPulse: 'pulse 0.75s infinite',
+      },
+      screens: {
+        '-2xl': { max: '1535px' },
+        // => @media (max-width: 1535px) { ... }
+
+        '-xl': { max: '1279px' },
+        // => @media (max-width: 1279px) { ... }
+
+        '-lg': { max: '1023px' },
+        // => @media (max-width: 1023px) { ... }
+
+        '-md': { max: '767px' },
+        // => @media (max-width: 767px) { ... }
+
+        '-sm': { max: '639px' },
+        // => @media (max-width: 639px) { ... }
       },
     }
   },
