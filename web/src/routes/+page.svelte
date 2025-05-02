@@ -81,16 +81,7 @@
   }
   return false;
   }
-  /*
-  //opens the webpage in a seperate window (for desktop users only)
-  function openNewWindow() {
-    contentWindow.classList.add('opacity-0')
-      const url = 'http://127.0.0.1:5315/';
-      const windowFeatures = 'width=350,height=600,right=50,top=300,toolbar=no,menubar=no,resizable=no,status=no';
-      window.open(url, '_blank', windowFeatures);
-  
-  }
-*/
+
 
 //For communicating with backend
   //handles majoriy of the backend communication
@@ -107,7 +98,7 @@
       userid: userID
     }
     //sends JSON data to the backend adding the client to the participants field
-    fetch(`https://lection-backend.fly.dev/joinlobby${localJoincode}`, 
+    fetch(`https://lection-backend.fly.dev/joinlobby/${localJoincode}`, 
   {
       method: "POST", 
       body: JSON.stringify(bodyContent),
@@ -163,7 +154,7 @@
 
     //Starts listening to SSE from the backend to update prompts
     async function lobbyClientCom() {
-      const source = new EventSource(`https://lection-backend.fly.dev/lobbyclient${joincodeField}${username}${userID}`)
+      const source = new EventSource(`https://lection-backend.fly.dev/lobbyclient/${joincodeField}/${userID}`)
 
       source.addEventListener('message', message => {
         let response = JSON.parse(message.data)
@@ -203,7 +194,7 @@
       promptIndex: currentPrompt
     }
   //submit asnwer to mongodb
-    fetch(`https://lection-backend.fly.dev/clientsubmitresponse${joincodeField}${username}${userID}`, 
+    fetch(`https://lection-backend.fly.dev/clientsubmitresponse/${joincodeField}/${userID}`, 
   {
       method: "POST", 
       body: JSON.stringify(asnwerContent),
@@ -262,6 +253,7 @@
       clearUsernameBtn.disabled = false
     }
   }
+
   function getCookie(name) {
     const value = `; ${mountedDocument.cookie}`;
     const parts = value.split(`; ${name}=`);
