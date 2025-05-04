@@ -118,8 +118,9 @@
       }
       const data = await response.json();
       if (data.joined === false) {
+        console.log(data.message)
         errorPassed = true
-        setStatusText("Cannot join an active Lectionary", 'text-red-800')
+        setStatusText(`${data.message}`, 'text-red-800')
         setTimeout(() => {
         setStatusText()
         },1700)
