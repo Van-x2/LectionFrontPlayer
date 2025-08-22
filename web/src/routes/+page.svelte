@@ -192,7 +192,8 @@
     let asnwerContent = {
       response: promptResponse,
       confidence: confidence,
-      promptIndex: currentPrompt
+      promptIndex: currentPrompt,
+      promptStatus: 2
     }
   //submit asnwer to mongodb
     fetch(`https://lection-backend.fly.dev/clientsubmitresponse/${joincodeField}/${userID}`, 
