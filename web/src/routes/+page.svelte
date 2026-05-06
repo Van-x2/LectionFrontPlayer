@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte'
+  import PromptIndexDropdown from '../lib/promptIndexDropdown.svelte'
 
   
   //variables used for collecting data from input forms
@@ -14,6 +15,10 @@
     let promptResponse
     let promptResponseField
     let currentPrompt = 0
+
+    //used to remember if user submitted a prompt for a given prompt index
+    let promptsSubmitted = []
+    let promptSubmitted = false
     //
     let confidenceField = 3
     let confidence = 3
@@ -35,20 +40,22 @@
   let statusText
   let lobbyJoinCard
   let lobbyPreStartCard
-  let promptContent
-  let ResponseSubmittedCard
   let contentWindow
   let leaveLobbyBtn
   let clearUsernameBtn
 
+  // reactive prompt text — replaces direct DOM manipulation
+  let promptText = ''
+  let storedPrompts = []
+
+  // whenever currentPrompt changes (e.g. via dropdown), re-render prompt content
+  $: if (storedPrompts.length) updatePromptPage(storedPrompts, currentPrompt)
+
   
   onMount(() => {
   //so the user cannot scroll the page
-  //document.body.style.overflow = 'hidden'
   document.body.style.touchAction = 'none'
   document.body.style.position = 'fixed'
-
-
 
   //variable used to reference the document outside of onMount()
   mountedDocument = document
@@ -59,8 +66,6 @@
   statusText = document.getElementById('statusText')
   lobbyJoinCard = document.getElementById('lobbyJoinCard')
   lobbyPreStartCard = document.getElementById('lobbyPreStartCard')
-  promptContent = document.getElementById('promptContent')
-  ResponseSubmittedCard = document.getElementById('ResponseSubmittedCard')
   contentWindow = document.getElementById('window')
   clearUsernameBtn = document.getElementById('clearUsernameBtn')
   leaveLobbyBtn = document.getElementById('leaveLobbyBtn')
@@ -84,7 +89,7 @@
 
 
 //For communicating with backend
-  //handles majoriy of the backend communication
+  //handles majority of the backend communication
   function joinLobby(localJoincode) {
     //error handling
     let errorPassed = false
@@ -158,11 +163,24 @@
       const source = new EventSource(`https://lection-backend.fly.dev/lobbyclient/${joincodeField}/${userID}`)
 
       source.addEventListener('message', message => {
-        let response = JSON.parse(message.data)
+      let response = JSON.parse(message.data)
 
-        currentPrompts = response.prompts
+      currentPrompts = response.prompts
+      storedPrompts = response.prompts
+
+      const newLength = response.prompts.length;
+      if (newLength > promptsSubmitted.length) {
+        promptsSubmitted = [
+          ...promptsSubmitted,
+          ...Array(newLength - promptsSubmitted.length).fill(false)
+        ];
+
+        // New prompt arrived from host — advance to it
+        currentPrompt = newLength - 1
+      }
 
         console.log(response)
+        console.log(promptsSubmitted)
         if(response.prompts.length === 1) {
           startLobby(currentPrompts)
         }
@@ -171,7 +189,8 @@
           leaveLobby()
         }
         if(currentPrompts != oldPrompts) {
-          updatePromptPage(currentPrompts)
+          console.log(`new prompt data received`)
+          updatePromptPage(currentPrompts, currentPrompt)
         }
         oldPrompts = currentPrompts
       })
@@ -185,7 +204,7 @@
     location.reload();
   }
   //handles submitting data back to the database
-  function submitResponse() {
+function submitResponse() {
     promptResponse = promptResponseField
     confidence = confidenceValue
 
@@ -195,17 +214,18 @@
       promptIndex: currentPrompt,
       promptStatus: 3
     }
-  //submit asnwer to mongodb
+    console.log('sent content:')
+    console.log(asnwerContent)
+
     fetch(`https://lection-backend.fly.dev/clientsubmitresponse/${joincodeField}/${userID}`, 
-  {
+    {
       method: "POST", 
       body: JSON.stringify(asnwerContent),
       headers: {
         'Content-Type': 'application/json'
       }
     })
-    //error checking response
-    .then( response => {
+    .then(response => {
       if (!response.ok) {
         throw new Error(`There was an error: ${response.status}`)
       }
@@ -214,14 +234,15 @@
     .then(console.log('submitted response'))
     .catch(error => console.error(error))
 
-    ResponseSubmittedCard.classList.add('opacity-75')
-    ResponseSubmittedCard.classList.remove('opacity-0')
-    ResponseSubmittedCard.classList.add('pointer-events-auto')
+    promptsSubmitted[currentPrompt] = true
+    promptsSubmitted = promptsSubmitted // trigger Svelte reactivity
 
-    currentPrompt = currentPrompt + 1
+    promptSubmitted = true
+    // ❌ removed: currentPrompt = currentPrompt + 1
+    // The host's next SSE message will push currentPrompt forward naturally
   }
 
-//for listing to page actions
+//for listening to page actions
   function menuIconClicked() {
     if(!menuOpen) {
       menuIcon.classList.add('-rotate-90')
@@ -267,7 +288,6 @@
     //defines permanent username using the temp usernameField var
     username = usernameField.trim()
     userID = generateID()
-
 
     //Adds username to the cookie & makes sure it wont expire for a long LONG time
     const farFutureDate = new Date()
@@ -351,16 +371,18 @@
   lobbyPreStartCard.classList.add('pointer-events-none')
   }
 
-  function updatePromptPage(prompts) {
-    ResponseSubmittedCard.classList.remove('opacity-75')
-    ResponseSubmittedCard.classList.add('opacity-0')
-    ResponseSubmittedCard.classList.add('pointer-events-none')
-    ResponseSubmittedCard.classList.remove('pointer-events-auto')
-
+  function updatePromptPage(prompts, promptIndex) {
     promptResponseField = ''
     confidenceValue = 3
-    const currentPromptContent = prompts[currentPrompt]
-    promptContent.innerText = currentPromptContent
+    const currentPromptContent = prompts[promptIndex]
+    console.log(currentPromptContent)
+    promptText = currentPromptContent?.prompt ?? ''
+
+    if(promptsSubmitted[promptIndex]) {
+      promptSubmitted = true
+    } else {
+      promptSubmitted = false
+    }
   }
 
 
@@ -425,6 +447,7 @@
       <div class="h-full w-full">
         <div class="w-full h-full">
           <div class="w-full h-full relative">
+
             <div id="usernameInputCardParent" class="w-full h-full absolute z-50">
               <div id="usernameInputCard" class="relative w-full h-full transition duration-[800ms] ">
                 <div class="w-full h-full bg-gray2 rounded-tr-[40px] rounded-tl-[40px] border-[2px] border-accent">
@@ -580,27 +603,24 @@
                     </p>
                   </div>
                 </div>
-                <div id="ResponseSubmittedCard" class="w-full h-full flex justify-center items-center absolute z-20 bg-gray1 transition-all duration-300 opacity-0 pointer-events-none">
-                  <div class="w-full h-full flex justify-center items-center">
-                    <p class="text-center w-[70%] text-[18px] text-neutral-800 font-normal font-semibold">
-                      Response Submitted
-                    </p>
-                  </div>
-                </div>
-                <div id="lobbyHappeningCard" class="w-full h-full flex flex-col justify-start absolute z-10 bg-gray1 transition-all duration-300">
+                <div id="lobbyHappeningCard" class="w-full h-full flex flex-col justify-start absolute z-20 bg-gray1 transition-all duration-300">
                   <div class="w-full h-[95%]">
                     <div class="w-full h-full flex justify-center items-center">
-                      <div class="w-[90%] h-[100%]">
-                        <div class="w-full h-full bg-white rounded-[20px]  border-secondary border-[2.5px] shadow-xl py-[12px] px-[12px]">
+                      <div class="w-[90%] h-[100%] relative">
+
+                        <div class="absolute top-[12px] left-[17px] z-50">
+                          <PromptIndexDropdown bind:value={currentPrompt} promptsSubmitted={promptsSubmitted}/>
+                        </div>
+
+                        <div class="w-full h-full bg-white rounded-[20px] absolute z-10  border-secondary border-[2.5px] shadow-xl py-[12px] px-[12px]">
                           <div class="w-full h-full flex flex-col p-[5px]">
                             <div class="w-full h-[65%]">
                               <div class="w-full h-1/3  flex items-center justify-center  flex-col pb-4">
-                                <div class="w-full h-1/2 font-normal text-[20px] font-semibold -translate-x-[3px] -translate-y-[8px] text-secondary">
-                                  {currentPrompt + 1}
+                                <div class="w-full h-1/2 font-normal z-30 text-[20px] font-semibold -translate-x-[3px] -translate-y-[8px] text-secondary">
                                 </div>
                                 <div class="w-full h-1/2 flex justify-center">
-                                  <p id="promptContent" class="w-[85%] h-full text-neutral-800 text-[14px] font-normal font-semibold text-center  -translate-y-[20px]">
-                                    This is a mockup prompt, what do you think, what are your thoughts?
+                                  <p class="w-[85%] h-full text-neutral-800 text-[14px] font-normal font-semibold text-center -translate-y-[20px]">
+                                    {promptText}
                                   </p>
                                 </div>
                               </div>
@@ -639,6 +659,10 @@
                             </div>
                           </div>
                         </div>
+
+                        <div class=" {promptSubmitted ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'} absolute w-full h-full bg-white rounded-[20px] duration-300 z-20 py-[12px] px-[12px]">
+                        </div>
+
                       </div>
                     </div>
                   </div>
